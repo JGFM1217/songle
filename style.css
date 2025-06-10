@@ -1,0 +1,69 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-image: linear-gradient(to bottom, #0d1117, #172659);
+    color: white;
+    font-family: "Courier New", "monospace";
+    font-weight: bold;
+    position: relative;
+    overflow: hidden;
+}
+
+.loader {
+    width: 45px;
+    height: 40px;
+    opacity: 1;
+    background:
+            linear-gradient(#0000 calc(1*100%/6),#fff 0 calc(3*100%/6),#0000 0),
+            linear-gradient(#0000 calc(2*100%/6),#fff 0 calc(4*100%/6),#0000 0),
+            linear-gradient(#0000 calc(3*100%/6),#fff 0 calc(5*100%/6),#0000 0);
+    background-size: 10px 400%;
+    background-repeat: no-repeat;
+    position: absolute;
+    z-index: 10;
+    animation:
+            matrix 1s linear 0s 3 forwards,
+            fadeout 1s linear 2s forwards;
+}
+
+@keyframes matrix {
+    0% { background-position: 0% 100%, 50% 100%, 100% 100%; }
+    100% { background-position: 0% 0%, 50% 0%, 100% 0%; }
+}
+
+@keyframes fadeout {
+    0% {opacity: 100}
+    50% {opacity: 0}
+    100% {opacity: 0}
+}
+
+
+header4 {
+    opacity: 0;
+    animation: fade-in 2s ease-in 3s forwards;
+    font-size: x-large
+}
+
+@keyframes fade-in {
+    0% {opacity: 0}
+    25% {opacity: 1}
+    50% {
+        opacity: 1;
+        transform: translateY(-10%)}
+
+    100% {opacity: 1}
+}
+
+p {
+    opacity: 0;
+    animation: fade-in 2s ease-in 3s forwards;
+}
+
+
+input {
+    opacity: 0;
+    animation: fade-in 2s ease-in 3s forwards;
+}
