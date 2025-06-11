@@ -47,16 +47,6 @@ header4 {
     font-size: x-large
 }
 
-@keyframes fade-in {
-    0% {opacity: 0}
-    25% {opacity: 1}
-    50% {
-        opacity: 1;
-        transform: translateY(-10%)}
-
-    100% {opacity: 1}
-}
-
 p {
     opacity: 0;
     animation: fade-in 2s ease-in 3s forwards;
@@ -67,3 +57,14 @@ input {
     opacity: 0;
     animation: fade-in 2s ease-in 3s forwards;
 }
+
+@keyframes fade-in {
+    0% {opacity: 0}
+    25% {opacity: 1}
+    50% {
+        opacity: 1;
+        transform: translateY(-10%)}
+
+    100% {opacity: 1}
+}
+
