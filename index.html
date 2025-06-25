@@ -1,17 +1,19 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Songle</title>
   <link rel="stylesheet" href="style.css">
   <link rel="icon" type="image/x-icon" href="Favicon.png">
-  <link rel="script" href="script.js">
+  <script src="script.js" defer></script>
 </head>
 <body>
-<span class="loader"></span>
-<div id = "Header">
-  <header4>Current Song: ???</header4>
-  <p>Current Guesses: 0</p>
-  <input type ="text" id="guess" name="SongGuess"><br>
-</div>
+  <span class="loader"></span>
+  <div id="Header">
+    <h4>Current Song: ???</h4>
+    <p id="guessCount">Current Guesses: 0</p>
+    <input type="text" id="guess" name="SongGuess" placeholder="Enter your guess"><br>
+  </div>
 </body>
 </html>
