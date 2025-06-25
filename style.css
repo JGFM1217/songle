@@ -41,7 +41,7 @@ body {
 }
 
 
-header4 {
+h4 {
     opacity: 0;
     animation: fade-in 2s ease-in 3s forwards;
     font-size: x-large
