@@ -1,55 +1,184 @@
-body {
+/* === GENERAL STYLES === */
+
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: #121212;
+    color: #eee;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    margin: 0;
-    background-image: linear-gradient(to bottom, #0d1117, #172659);
-    color: white;
-    font-family: "Courier New", monospace;
-    font-weight: bold;
+    flex-direction: column;
+}
+
+/* === LOADING SCREEN === */
+#loadingScreen {
+    position: fixed;
+    inset: 0;
+    background-color: #121212;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 1;
+    transition: opacity 1s ease;
+    pointer-events: auto;
+}
+
+.loading-text {
+    font-size: 28px;
+    margin-bottom: 30px;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+    color: #4caf50; /* green */
+    user-select: none;
+}
+
+/* Musical note bouncing animation */
+.loading-notes {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    height: 50px;
+}
+
+.note {
+    font-size: 36px;
+    color: #4caf50; /* green */
+    user-select: none;
+    animation: bounceNote 1.5s ease-in-out infinite;
+    transform-origin: center bottom;
+}
+
+/* Stagger animation delays for wave bounce */
+.note:nth-child(1) { animation-delay: 0s; }
+.note:nth-child(2) { animation-delay: 0.15s; }
+.note:nth-child(3) { animation-delay: 0.3s; }
+.note:nth-child(4) { animation-delay: 0.45s; }
+.note:nth-child(5) { animation-delay: 0.6s; }
+.note:nth-child(6) { animation-delay: 0.75s; }
+.note:nth-child(7) { animation-delay: 0.9s; }
+.note:nth-child(8) { animation-delay: 1.05s; }
+
+@keyframes bounceNote {
+    0%, 100% {
+        transform: translateY(0);
+        opacity: 0.6;
+    }
+    50% {
+        transform: translateY(-20px);
+        opacity: 1;
+    }
+}
+
+/* === MAIN GAME SCREEN === */
+
+#gameScreen {
+    max-width: 480px;
+    width: 90vw;
+    text-align: center;
+}
+
+h1 {
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #4caf50; /* green */
+}
+
+#songInfo {
+    font-size: 18px;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: space-between;
+    color: #ccc;
+    font-weight: 600;
+}
+
+/* Music progress bar styled as a subtle music score */
+#musicScore {
+    --bar-height: 16px;
     position: relative;
-    overflow: hidden;
-}
-
-.loader {
-    width: 45px;
-    height: 40px;
-    background:
-            linear-gradient(#0000 calc(1*100%/6),#fff 0 calc(3*100%/6),#0000 0),
-            linear-gradient(#0000 calc(2*100%/6),#fff 0 calc(4*100%/6),#0000 0),
-            linear-gradient(#0000 calc(3*100%/6),#fff 0 calc(5*100%/6),#0000 0);
-    background-size: 10px 400%;
-    background-repeat: no-repeat;
-    position: absolute;
-    z-index: 10;
-    animation:
-            matrix 1s linear 0s 3 forwards,
-            fadeout 1s linear 2s forwards;
-}
-
-@keyframes matrix {
-    0% { background-position: 0% 100%, 50% 100%, 100% 100%; }
-    100% { background-position: 0% 0%, 50% 0%, 100% 0%; }
-}
-
-@keyframes fadeout {
-    0% {opacity: 100}
-    100% {opacity: 0}
-}
-
-h4, p, input {
-    opacity: 0;
-    animation: fade-in 2s ease-in 3s forwards;
-}
-
-@keyframes fade-in {
-    0% {opacity: 0}
-    100% {opacity: 1}
-}
-
-img {
-    max-width: 300px;
-    margin-top: 20px;
+    height: var(--bar-height);
+    background: linear-gradient(90deg, #4caf50 0%, #81c784 100%);
     border-radius: 12px;
+    overflow: hidden;
+    margin: 12px 0 24px 0;
+    box-shadow: 0 0 8px #4caf5088;
+}
+
+/* The progress indicator inside the bar */
+#musicScore::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: var(--bar-height);
+    width: 0%;
+    background: linear-gradient(90deg, #d0f0c0 30%, #4caf50 70%);
+    border-radius: 12px;
+    box-shadow:
+            0 0 5px #4caf50,
+            0 0 15px #81c784;
+    transition: width 0.3s ease;
+    filter: drop-shadow(0 0 2px #81c784);
+    animation: musicGlow 2s ease-in-out infinite alternate;
+}
+
+/* Animated glowing effect */
+@keyframes musicGlow {
+    0% {
+        filter: drop-shadow(0 0 3px #4caf50);
+    }
+    100% {
+        filter: drop-shadow(0 0 8px #81c784);
+    }
+}
+
+/* Input box styling */
+#guessInput {
+    width: 100%;
+    font-size: 18px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 2px solid #4caf50;
+    background: #1e1e1e;
+    color: #eee;
+    font-weight: 600;
+    outline-offset: 2px;
+    transition: border-color 0.3s ease;
+    box-sizing: border-box;
+}
+
+#guessInput:focus {
+    border-color: #81c784;
+    background: #2a2a2a;
+}
+
+/* Status message below input */
+#statusMessage {
+    margin-top: 14px;
+    font-size: 16px;
+    color: #81c784;
+    min-height: 22px;
+    font-weight: 600;
+    user-select: none;
+}
+
+/* === Total guesses today counter fixed bottom-left === */
+#totalGuessesToday {
+    position: fixed;
+    bottom: 12px;
+    left: 12px;
+    font-size: 14px;
+    color: #4caf50;
+    font-weight: 700;
+    user-select: none;
+    background: #222;
+    padding: 6px 12px;
+    border-radius: 12px;
+    box-shadow: 0 0 8px #4caf5088;
+    z-index: 10000;
 }
