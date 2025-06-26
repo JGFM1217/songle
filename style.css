@@ -6,7 +6,7 @@ body {
     margin: 0;
     background-image: linear-gradient(to bottom, #0d1117, #172659);
     color: white;
-    font-family: "Courier New", "monospace";
+    font-family: "Courier New", monospace;
     font-weight: bold;
     position: relative;
     overflow: hidden;
@@ -15,7 +15,6 @@ body {
 .loader {
     width: 45px;
     height: 40px;
-    opacity: 1;
     background:
             linear-gradient(#0000 calc(1*100%/6),#fff 0 calc(3*100%/6),#0000 0),
             linear-gradient(#0000 calc(2*100%/6),#fff 0 calc(4*100%/6),#0000 0),
@@ -36,34 +35,21 @@ body {
 
 @keyframes fadeout {
     0% {opacity: 100}
-    50% {opacity: 0}
     100% {opacity: 0}
 }
 
-
-h4 {
-    opacity: 0;
-    animation: fade-in 2s ease-in 3s forwards;
-    font-size: x-large
-}
-
-p {
-    opacity: 0;
-    animation: fade-in 2s ease-in 3s forwards;
-}
-
-
-input {
+h4, p, input {
     opacity: 0;
     animation: fade-in 2s ease-in 3s forwards;
 }
 
 @keyframes fade-in {
     0% {opacity: 0}
-    25% {opacity: 1}
-    50% {
-        opacity: 1;}
-
     100% {opacity: 1}
 }
 
+img {
+    max-width: 300px;
+    margin-top: 20px;
+    border-radius: 12px;
+}
