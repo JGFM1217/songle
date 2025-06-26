@@ -1,21 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Songle</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="icon" type="image/x-icon" href="Favicon.png">
-  <script src="script.js" defer></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Guess the Song - Songle.org</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-<span class="loader"></span>
-<div id="Header">
-  <h4>Current Song: ???</h4>
-  <p id="guessCount">Current Guesses: 0</p>
-  <input type="text" id="guess" name="SongGuess" placeholder="Enter your guess"><br>
-  <ul id="suggestions" style="list-style-type: none; padding: 0;"></ul>
-  <div id="albumArt"></div>
+
+<!-- Loading Screen -->
+<div id="loadingScreen" role="alert" aria-live="polite" aria-atomic="true">
+  <div class="loading-text">Loading song...</div>
+  <div class="loading-notes" aria-hidden="true">
+    <span class="note">🎵</span>
+    <span class="note">🎶</span>
+    <span class="note">🎵</span>
+    <span class="note">🎶</span>
+    <span class="note">🎵</span>
+    <span class="note">🎶</span>
+    <span class="note">🎵</span>
+    <span class="note">🎶</span>
+  </div>
 </div>
+
+<!-- Main Game Screen -->
+<main id="gameScreen" hidden>
+  <h1>Guess the Song!</h1>
+
+  <div id="songInfo" aria-live="polite">
+    <div><strong>Song Name:</strong> <span id="songName">???</span></div>
+    <div><strong>Guess Attempts:</strong> <span id="guessAttempts">0</span></div>
+  </div>
+
+  <div
+          id="musicScore"
+          role="progressbar"
+          aria-label="Music progress"
+          aria-valuemin="0"
+          aria-valuemax="20"
+          aria-valuenow="0"
+          aria-live="polite"
+  ></div>
+
+  <input
+          id="guessInput"
+          type="text"
+          placeholder="Type your guess here..."
+          autocomplete="off"
+          autocorrect="off"
+          autocapitalize="off"
+          spellcheck="false"
+          aria-label="Guess input box"
+  />
+
+  <!-- YouTube Player -->
+  <div id="playerContainer" style="display:none;">
+    <div id="player"></div>
+  </div>
+
+  <div id="statusMessage" role="status" aria-live="polite"></div>
+</main>
+
+<!-- Total guesses today bottom-left -->
+<div id="totalGuessesToday" aria-live="polite" aria-atomic="true">
+  Total Guesses Today: <span id="totalGuessesCount">0</span>
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
