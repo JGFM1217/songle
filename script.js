@@ -21,7 +21,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const SONGS = [
         { id: 'dQw4w9WgXcQ', title: 'Never Gonna Give You Up' },
         { id: 'i5NmRDLkSnI', title: 'Beggin' },
-        { id: 'Z8NiouNEivo', title: 'BABY SAID' },
         { id: 'Cfv_6gLijEo', title: 'Troublemaker' },
         { id: 'HIgvP7B3Hg8', title: 'Runaway Baby' },
         { id: 'xHOgq4C8P9Y', title: 'I Kissed a Girl' },
@@ -30,7 +29,6 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 'kAJz7c97Cyo', title: '...Baby One More Time' },
         { id: 'GPGdXrQID7c', title: 'Fluorescent Adolescent' },
         { id: 'aJOTlE1K90k', title: 'Girl Like you' },
-        { id: 'hT_nvWreIhg', title: 'Counting Stars' },
         { id: 'ZbZSe6N_BXs', title: 'Happy' },
         { id: 'Ju5USsFdrrY', title: 'Sugar' },
         { id: '3tmd-ClpJxA', title: 'Believer' },
@@ -38,7 +36,14 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 'ktvTqknDobU', title: 'Radioactive' },
         { id: '2Vv-BfVoq4g', title: 'Perfect' },
         { id: 'CevxZvSJLk8', title: 'Roar' },
-        { id: 'UceaB4D0jpo', title: 'Heat Waves' }
+        { id: 'JlOZR5OwS', title: 'TIMEZONE'},
+        { id: 'ds18Ozzp8h0', title: 'HONEY (ARE YOU COMING?)'},
+        { id: 'WuEJfwhHiC8', title: 'Apple Juice'},
+        { id: 'x3iVWOcrXpo', title: 'OH OKAY'},
+        { id: 'o6aJJ6Q5zhg', title: 'ESPRESSO MACCHIATO'},
+        { id: 'uS9A9lqd7-k', title: 'Lets get it started'},
+        { id: 'tBKYI3-3lMg', title: 'Armed and dangerous'},
+        { id: 'IbpOfzrNjTY', title: 'Feel good INC'},
     ];
 
     let currentSong, player, progress = 0, guessAttempts = 0;
