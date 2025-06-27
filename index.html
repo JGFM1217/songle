@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Guess the Song - Songle.org</title>
+  <title>Song Guesser - Songle.org</title>
   <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/x-icon" href="favicon.png">
 </head>
 <body>
 
@@ -24,6 +25,7 @@
 </div>
 
 <!-- Main Game Screen -->
+
 <main id="gameScreen" hidden>
   <h1>Guess the Song!</h1>
 
@@ -42,6 +44,21 @@
           aria-live="polite"
   ></div>
 
+  <div>
+    <span id="totalGuessesCount"></span>
+  </div>
+
+
+  <p id ="beta">Beta V0.1</p>
+  <button id="helpButton" aria-label="I can't hear the song help">
+    I can't hear the song?
+    <span class="tooltipText">
+    If you cannot hear the song: <br>
+    Please reload the page.<br>
+    Thank you for your patience.
+  </span>
+  </button>
+
   <input
           id="guessInput"
           type="text"
@@ -53,6 +70,8 @@
           aria-label="Guess input box"
   />
 
+
+
   <!-- YouTube Player -->
   <div id="playerContainer" style="display:none;">
     <div id="player"></div>
@@ -60,11 +79,6 @@
 
   <div id="statusMessage" role="status" aria-live="polite"></div>
 </main>
-
-<!-- Total guesses today bottom-left -->
-<div id="totalGuessesToday" aria-live="polite" aria-atomic="true">
-  Total Guesses Today: <span id="totalGuessesCount">0</span>
-</div>
 
 <script src="script.js"></script>
 </body>
