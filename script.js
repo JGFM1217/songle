@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     // DOM elements
+    let playerReady = false;
     const loadingScreen = document.getElementById('loadingScreen');
     const gameScreen = document.getElementById('gameScreen');
     const musicScore = document.getElementById('musicScore');
@@ -13,30 +14,35 @@ document.addEventListener('DOMContentLoaded', () => {
     [...gameScreen.querySelectorAll('*')].forEach(el => {
         if (el.textContent.trim() === '0' && el.id !== 'guessAttempts') el.textContent = '';
     });
+    // Validate YouTube video ID format (11 characters, letters, numbers, _ and -)
+    function isValidYouTubeId(id) {
+        return typeof id === 'string' && /^[a-zA-Z0-9_-]{11}$/.test(id);
+    }
+
 
     // Song list
     const SONGS = [
-        { id: 'dQw4w9WgXcQ', title: 'Never Gonna Give You Up', length: 50 },
-        { id: 'm2nmCSpzU', title: 'Fairytale Of New York', length: 50 },
-        { id: 'i5NmRDLkSnI', title: 'Beggin', length: 50 },
-        { id: 'Z8NiouNEivo', title: 'BABY SAID', length: 50 },
-        { id: 'Cfv_6gLijEo', title: 'Troublemaker', length: 50 },
-        { id: 'HIgvP7B3Hg8', title: 'Runaway Baby', length: 50 },
-        { id: 'xHOgq4C8P9Y', title: 'I Kissed a Girl', length: 50 },
-        { id: 'BuYf0taXoNw', title: "He's a Pirate", length: 50 },
-        { id: 'XZe_pV2rXuk', title: 'Stressed Out', length: 50 },
-        { id: 'kAJz7c97Cyo', title: '...Baby One More Time', length: 50 },
-        { id: 'GPGdXrQID7c', title: 'Fluorescent Adolescent', length: 50 },
-        { id: 'aJOTlE1K90k', title: 'Senorita', length: 50 },
-        { id: 'hT_nvWreIhg', title: 'Counting Stars', length: 50 },
-        { id: 'ZbZSe6N_BXs', title: 'Happy', length: 50 },
-        { id: '09R8_2nJtjg', title: 'Sugar', length: 50 },
-        { id: '3tmd-ClpJxA', title: 'Believer', length: 50 },
-        { id: 'YQHsXMglC9A', title: 'Hello', length: 50 },
-        { id: 'ktvTqknDobU', title: 'Radioactive', length: 50 },
-        { id: '2Vv-BfVoq4g', title: 'Perfect', length: 50 },
-        { id: 'CevxZvSJLk8', title: 'Roar', length: 50 },
-        { id: 'UceaB4D0jpo', title: 'Heat Waves', length: 50 },
+        { id: 'dQw4w9WgXcQ', title: 'Never Gonna Give You Up', length: 120 },
+        { id: 'm2nmCSpzU', title: 'Fairytale Of New York', length: 120 },
+        { id: 'i5NmRDLkSnI', title: 'Beggin', length: 120 },
+        { id: 'Z8NiouNEivo', title: 'BABY SAID', length: 120 },
+        { id: 'Cfv_6gLijEo', title: 'Troublemaker', length: 120 },
+        { id: 'HIgvP7B3Hg8', title: 'Runaway Baby', length: 120 },
+        { id: 'xHOgq4C8P9Y', title: 'I Kissed a Girl', length: 120 },
+        { id: 'BuYf0taXoNw', title: "He's a Pirate", length: 120 },
+        { id: 'XZe_pV2rXuk', title: 'Stressed Out', length: 120 },
+        { id: 'kAJz7c97Cyo', title: '...Baby One More Time', length: 120} ,
+        { id: 'GPGdXrQID7c', title: 'Fluorescent Adolescent', length: 120 },
+        { id: 'aJOTlE1K90k', title: 'Senorita', length: 120 },
+        { id: 'hT_nvWreIhg', title: 'Counting Stars', length: 120 },
+        { id: 'ZbZSe6N_BXs', title: 'Happy', length: 120 },
+        { id: 'Ju5USsFdrrY', title: 'Sugar', length: 120 },
+        { id: '3tmd-ClpJxA', title: 'Believer', length: 120 },
+        { id: 'YQHsXMglC9A', title: 'Hello', length: 120 },
+        { id: 'ktvTqknDobU', title: 'Radioactive', length: 120 },
+        { id: '2Vv-BfVoq4g', title: 'Perfect', length: 120 },
+        { id: 'CevxZvSJLk8', title: 'Roar', length: 120 },
+        { id: 'UceaB4D0jpo', title: 'Heat Waves', length: 120 },
     ];
 
     let currentSong, player, progress = 0, guessAttempts = 0;
@@ -54,7 +60,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateMusicProgress(value) {
         const percent = Math.min(100, (value / currentSong.length) * 100);
-        musicScore.style.setProperty('--progress-width', `${percent}%`);
 
         let progressFill = musicScore.querySelector('.progress-fill');
         if (!progressFill) {
@@ -72,10 +77,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function startMusicProgress() {
+        if (!currentSong || !currentSong.length) return;
         clearInterval(progressInterval);
         progress = 0;
         updateMusicProgress(progress);
-
         progressInterval = setInterval(() => {
             progress++;
             if (progress >= currentSong.length) {
@@ -88,6 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 1000);
     }
 
+
     function loadYouTubeAPI() {
         if (window.YT && window.YT.Player) {
             youtubeAPIReady = true;
@@ -97,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         window.onYouTubeIframeAPIReady = () => {
             youtubeAPIReady = true;
-            createPlayer();
+            if (currentSong) createPlayer(); // ✅ Only if song is set
         };
 
         const tag = document.createElement('script');
@@ -106,37 +112,67 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function createPlayer() {
-        try {
-            player = new YT.Player('player', {
-                height: '0',
-                width: '0',
-                videoId: currentSong.id,
-                playerVars: {
-                    autoplay: 1, controls: 0, mute: 1,
-                    modestbranding: 1, playsinline: 1,
+        player = new YT.Player('player', {
+            height: '0',
+            width: '0',
+            videoId: currentSong.id,
+            playerVars: {
+                autoplay: 1,
+                controls: 0,
+                mute: 1,
+                modestbranding: 1,
+                playsinline: 1
+            },
+            events: {
+                onReady: (event) => {
+                    playerReady = true;
+                    event.target.playVideo();
+                    startMusicProgress();
                 },
-                events: {
-                    onReady: (event) => event.target.playVideo(),
-                    onError: () => {
-                        console.warn('Invalid video ID or playback error. Skipping...');
-                        newSongRound(); // Load next valid song
-                    }
+                onError: (e) => {
+                    console.warn('🎵 Skipping song due to error:', currentSong.id, e.data);
+                    setTimeout(() => newSongRound(), 1000);
                 }
-            });
-        } catch (err) {
-            console.error('YouTube API error:', err);
+            }
+        });
+    }
+
+    // Validate YouTube video existence via oEmbed endpoint
+    async function validateVideo(videoId) {
+        try {
+            const response = await fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`);
+            return response.ok;
+        } catch {
+            return false;
         }
     }
 
-    function loadNewSong(song) {
-        if (!youtubeAPIReady) {
-            loadYouTubeAPI(); // Creates player
-        } else if (player && player.loadVideoById) {
-            player.loadVideoById(song.id);
-            player.mute();
-            player.playVideo();
-        } else {
+    async function loadNewSong(song) {
+        if (!song || !isValidYouTubeId(song.id)) {
+            console.warn('⛔ Invalid YouTube video ID:', song ? song.id : song);
+            newSongRound();
+            return;
+        }
+
+        const isValid = await validateVideo(song.id);
+        if (!isValid) {
+            console.warn('⛔ Skipping invalid or unavailable video:', song.id);
+            newSongRound();
+            return;
+        }
+
+        if (!player || !player.loadVideoById) {
             createPlayer();
+        } else {
+            try {
+                player.loadVideoById(song.id);
+                player.mute();
+                player.playVideo();
+                userInteracted = false;
+            } catch (err) {
+                console.warn('⚠️ Error loading video:', err);
+                createPlayer(); // fallback
+            }
         }
     }
 
@@ -160,7 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
         guessInput.disabled = false;
         statusMessage.textContent = '🎵 Listen and guess the song!';
 
-        loadNewSong(currentSong);
+        await loadNewSong(currentSong);
         startMusicProgress();
         updateTotalGuessesUI();
         guessInput.focus();
@@ -210,7 +246,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-
     // Audio unmute on user interaction
     document.body.addEventListener('click', () => {
         if (!userInteracted && player && player.unMute) {
@@ -218,7 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
             userInteracted = true;
             statusMessage.textContent = '🔊 Audio unmuted!';
         }
-    }, { once: true });
+    }, { once: false }); // change once:true to false
 
     document.body.addEventListener('keydown', () => {
         if (!userInteracted && player && player.unMute) {
@@ -226,7 +261,7 @@ document.addEventListener('DOMContentLoaded', () => {
             userInteracted = true;
             statusMessage.textContent = '🔊 Audio unmuted!';
         }
-    }, { once: true });
+    }, { once: false });
 
     // Initialize
     currentSong = getRandomSong();
