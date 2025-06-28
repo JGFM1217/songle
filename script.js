@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: '3tmd-ClpJxA', title: 'Believer' },
         { id: 'YQHsXMglC9A', title: 'Hello' },
         { id: 'ktvTqknDobU', title: 'Radioactive' },
-        { id: '2Vv-BfVoq4g', title: 'Perfect' },
+        { id: 'cNGjD0VG4R8', title: 'Perfect' },
         { id: 'CevxZvSJLk8', title: 'Roar' },
         { id: 'JlOZR5OwS', title: 'TIMEZONE'},
         { id: 'ds18Ozzp8h0', title: 'HONEY (ARE YOU COMING?)'},
