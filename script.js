@@ -8,15 +8,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const guessInput = document.getElementById('guessInput');
     const statusMessage = document.getElementById('statusMessage');
     const totalGuessesCount = document.getElementById('totalGuessesCount');
+    const ticking = document.getElementById('countdownAudio');
 
-    // Remove unwanted "0"s
     [...gameScreen.querySelectorAll('*')].forEach(el => {
         if (el.textContent.trim() === '0' && el.id !== 'guessAttempts') el.textContent = '';
     });
-
-    function isValidYouTubeId(id) {
-        return typeof id === 'string' && /^[a-zA-Z0-9_-]{11}$/.test(id);
-    }
 
     const SONGS = [
         { id: 'dQw4w9WgXcQ', title: 'Never Gonna Give You Up' },
@@ -49,6 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentSong, player, progress = 0, guessAttempts = 0;
     let progressInterval, userInteracted = false;
     let youtubeAPIReady = false;
+    let hasGuessedCorrectly = false;
 
     async function fetchGlobalGuesses() { return 0; }
     async function incrementGlobalGuesses() { return 0; }
@@ -57,16 +54,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const global = await fetchGlobalGuesses();
         totalGuessesCount.textContent = global;
     }
-    function fadeVolume(targetVolume, duration = 1500, steps = 30) {
+
+    function fadeVolume(target, duration = 1500, steps = 30) {
         if (!player || !player.setVolume) return;
-        const currentVolume = player.getVolume ? player.getVolume() : 0;
-        const stepSize = (targetVolume - currentVolume) / steps;
-        let step = 0;
+        const current = player.getVolume();
+        const step = (target - current) / steps;
+        let count = 0;
         const interval = setInterval(() => {
-            const newVolume = Math.min(100, Math.max(0, currentVolume + step * stepSize));
-            player.setVolume(newVolume);
-            step++;
-            if (step > steps) clearInterval(interval);
+            player.setVolume(current + step * count++);
+            if (count > steps) clearInterval(interval);
         }, duration / steps);
     }
 
@@ -75,15 +71,13 @@ document.addEventListener('DOMContentLoaded', () => {
         fadeVolume(100);
     }
 
-    function fadeOutThen(callback) {
+    function fadeOutThen(cb) {
         fadeVolume(0);
-        setTimeout(() => {
-            if (typeof callback === 'function') callback();
-        }, 1500); // match fade-out duration
+        setTimeout(cb, 1500);
     }
 
-    function updateMusicProgress(value) {
-        const percent = Math.min(100, (value / currentSong.length) * 100);
+    function updateMusicProgress(time) {
+        const percent = Math.min(100, (time / 20) * 100);
         let fill = musicScore.querySelector('.progress-fill');
         if (!fill) {
             fill = document.createElement('div');
@@ -100,75 +94,53 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function startMusicProgress() {
-        progress = 0;
-        updateMusicProgress(0);
         clearInterval(progressInterval);
-
         progressInterval = setInterval(() => {
-            progress++;
-            updateMusicProgress(progress);
-            if (progress >= currentSong.length) {
+            if (!player?.getCurrentTime) return;
+            const time = player.getCurrentTime();
+            updateMusicProgress(time);
+            if (time >= 20) {
                 clearInterval(progressInterval);
-                fadeOutThen(() => player.pauseVideo());
-                guessInput.disabled = true;
-                statusMessage.textContent = "⏱️ Time's up! Try again!";
+                player.pauseVideo();
+                startGuessCountdown();
             }
+        }, 300);
+    }
 
+    function startGuessCountdown() {
+        let timeLeft = 10;
+        ticking.currentTime = 0;
+        ticking.play();
+        guessInput.disabled = false;
+        statusMessage.textContent = "⏳ Time's up! You have 10 seconds to guess...";
+        const countdownInterval = setInterval(() => {
+            if (hasGuessedCorrectly || timeLeft <= 0) {
+                ticking.pause();
+                clearInterval(countdownInterval);
+                if (!hasGuessedCorrectly) {
+                    statusMessage.textContent = "❌ You missed it!";
+                    guessInput.disabled = true;
+                    fadeOutThen(() => newSongRound());
+                }
+            }
+            timeLeft--;
         }, 1000);
     }
 
     function loadYouTubeAPI() {
-        if (window.YT && window.YT.Player) {
+        if (window.YT?.Player) {
             youtubeAPIReady = true;
             onYouTubeIframeAPIReady();
             return;
         }
-
         window.onYouTubeIframeAPIReady = () => {
             youtubeAPIReady = true;
             if (currentSong) createPlayer();
         };
-
         const tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
         document.head.appendChild(tag);
     }
-
-    function createPlayer() {
-        player = new YT.Player('player', {
-            height: '0',
-            width: '0',
-            videoId: currentSong.id,
-            playerVars: {
-                autoplay: 1, controls: 0, mute: 1,
-                modestbranding: 1, playsinline: 1
-            },
-            events: {
-                onReady: (event) => {
-                    playerReady = true;
-                    event.target.playVideo();
-                    fadeIn();
-
-                    // Attach unmute handlers now
-                    document.body.addEventListener('click', unmuteHandler);
-                    document.body.addEventListener('keydown', unmuteHandler);
-
-                    const waitForDuration = setInterval(() => {
-                        if (player.getDuration && player.getDuration() > 0) {
-                            clearInterval(waitForDuration);
-                            currentSong.length = Math.floor(player.getDuration());
-                            startMusicProgress();
-                        }
-                    }, 200);
-                },
-                onError: (e) => {
-                    console.warn('🎵 Skipping song due to error:', currentSong.id, e.data);
-                    setTimeout(() => newSongRound(), 1000);
-                }
-            }
-        });
-    }
-
 
     async function validateVideo(videoId) {
         try {
@@ -180,35 +152,46 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function loadNewSong(song) {
-        if (!song || !isValidYouTubeId(song.id)) return newSongRound();
+        if (!song || !song.id) return newSongRound();
         const valid = await validateVideo(song.id);
         if (!valid) return newSongRound();
 
         if (!player || !player.loadVideoById) {
-            createPlayer(); // onReady will start music
+            createPlayer();
         } else {
             try {
                 player.loadVideoById(song.id);
                 player.mute();
                 player.playVideo();
                 fadeIn();
-
-                const waitForDuration = setInterval(() => {
-                    if (player.getDuration && player.getDuration() > 0) {
-                        clearInterval(waitForDuration);
-                        currentSong.length = Math.floor(player.getDuration());
-                        userInteracted = false;
-                        startMusicProgress();
-                    }
-                }, 200);
+                userInteracted = false;
+                startMusicProgress();
             } catch {
                 createPlayer();
             }
         }
     }
 
-    function stopCurrentSong() {
-        if (player?.stopVideo) fadeOutThen(() => player.stopVideo());
+    function createPlayer() {
+        player = new YT.Player('player', {
+            height: '0', width: '0',
+            videoId: currentSong.id,
+            playerVars: { autoplay: 1, controls: 0, mute: 1, modestbranding: 1, playsinline: 1 },
+            events: {
+                onReady: e => {
+                    playerReady = true;
+                    e.target.playVideo();
+                    fadeIn();
+                    startMusicProgress();
+                    document.body.addEventListener('click', unmuteHandler);
+                    document.body.addEventListener('keydown', unmuteHandler);
+                },
+                onError: e => {
+                    console.warn('🎵 Skipping song due to error:', currentSong.id, e.data);
+                    setTimeout(() => newSongRound(), 1000);
+                }
+            }
+        });
     }
 
     function getRandomSong() {
@@ -216,21 +199,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function newSongRound() {
-        stopCurrentSong();
+        if (player?.stopVideo) fadeOutThen(() => player.stopVideo());
         clearInterval(progressInterval);
-
         currentSong = getRandomSong();
-        console.log(`🎵 Now playing: "${currentSong.title}"`);
+        console.log("🎶 Now playing:", currentSong.title); // <-- Add this line
         songNameElem.textContent = '';
         guessAttempts = 0;
         guessAttemptsElem.textContent = 0;
         guessInput.value = '';
         guessInput.disabled = false;
+        hasGuessedCorrectly = false;
         statusMessage.textContent = '🎵 Listen and guess the song!';
         await loadNewSong(currentSong);
         updateTotalGuessesUI();
         guessInput.focus();
     }
+
 
     function normalizeString(str) {
         return str.toLowerCase().replace(/[^a-z0-9\s]/g, '').replace(/\s+/g, ' ').trim();
@@ -252,17 +236,16 @@ document.addEventListener('DOMContentLoaded', () => {
         return (longer.length - distance) / longer.length;
     }
 
-    guessInput.addEventListener('keydown', async (e) => {
-        if (e.key === 'Enter' && guessInput.value.trim() !== '') {
+    guessInput.addEventListener('keydown', async e => {
+        if (e.key === 'Enter' && guessInput.value.trim()) {
             const guess = normalizeString(guessInput.value);
             const correct = normalizeString(currentSong.title);
             const score = similarityScore(guess, correct);
-
             guessAttempts++;
             guessAttemptsElem.textContent = guessAttempts;
             incrementGlobalGuesses().then(updateTotalGuessesUI);
-
             if (guess === correct || score >= 0.8) {
+                hasGuessedCorrectly = true;
                 songNameElem.textContent = currentSong.title;
                 guessInput.disabled = true;
                 statusMessage.textContent = "✅ Correct! Next song in 3s...";
@@ -278,25 +261,19 @@ document.addEventListener('DOMContentLoaded', () => {
             player.unMute();
             userInteracted = true;
             statusMessage.textContent = '🔊 Audio unmuted!';
-            // Remove event listeners once unmuted to prevent extra calls
             document.body.removeEventListener('click', unmuteHandler);
             document.body.removeEventListener('keydown', unmuteHandler);
         }
     };
 
-
     document.body.addEventListener('click', unmuteHandler);
     document.body.addEventListener('keydown', unmuteHandler);
 
-    // Initialize
-    // Initialize
     loadYouTubeAPI();
 
     setTimeout(() => {
         loadingScreen.style.display = 'none';
         gameScreen.style.display = 'block';
-
-        currentSong = getRandomSong(); // choose song *after* loading
         newSongRound();
     }, 3000);
 });
