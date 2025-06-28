@@ -9,6 +9,7 @@
 </head>
 <body>
 
+<!-- Loading Screen -->
 <div id="loadingScreen" role="alert" aria-live="polite" aria-atomic="true">
   <div class="loading-text">Loading song...</div>
   <div class="loading-notes" aria-hidden="true">
@@ -23,6 +24,7 @@
   </div>
 </div>
 
+<!-- Main Game Screen -->
 
 <main id="gameScreen" hidden>
   <h1>Guess the Song!</h1>
@@ -47,7 +49,7 @@
   </div>
 
 
-  <p id ="beta">Beta V0.2.2.0</p>
+  <p id ="beta">Beta V0.2.3.0</p>
   <button id="helpButton" aria-label="I can't hear the song help">
     I can't hear the song?
     <span class="tooltipText">
@@ -70,10 +72,10 @@
           aria-label="Guess input box"
   />
 
-
+  <div id="rickSpewContainer" style="position: fixed; top:0; left:0; width:100vw; height:100vh; pointer-events:none; overflow: hidden; z-index: 9999;"></div>
   <audio id="countdownAudio" src="tick.mp3" preload="auto"></audio>
 
-
+  <!-- YouTube Player -->
   <div id="playerContainer" style="display:none;">
     <div id="player"></div>
   </div>
