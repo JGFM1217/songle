@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         for (let i = 0; i < numImages; i++) {
             const img = document.createElement('img');
-            img.src = '/images/rick.png'; // path to Rick Astley PNG
+            img.src = 'rick.png'; // path to Rick Astley PNG
             img.style.position = 'fixed';
             img.style.width = '80px';
             img.style.height = '80px';
