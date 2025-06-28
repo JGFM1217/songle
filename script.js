@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const songNameElem = document.getElementById('songName');
     const guessAttemptsElem = document.getElementById('guessAttempts');
     const guessInput = document.getElementById('guessInput');
-    let statusMessage = document.getElementById('statusMessage'); 
+    let statusMessage = document.getElementById('statusMessage'); // reassignable after clone
     const totalGuessesCount = document.getElementById('totalGuessesCount');
     const ticking = document.getElementById('countdownAudio');
 
@@ -15,7 +15,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     const recentSongs = [];
     const MAX_RECENT = 3;
-    img.src = 'rick.png'
+    if (loadingScreen) loadingScreen.style.display = 'none';
+    if (gameScreen) gameScreen.style.display = 'block';
 
 
 
@@ -45,6 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 'uS9A9lqd7-k', title: 'Lets get it started'},
         { id: 'tBKYI3-3lMg', title: 'Armed and dangerous'},
         { id: 'IbpOfzrNjTY', title: 'Feel good INC'},
+
     ];
 
     let currentSong, player, progressInterval, guessAttempts = 0;
@@ -52,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let youtubeAPIReady = false;
     let hasGuessedCorrectly = false;
 
-nt
+    // Placeholder for backend fetch/increment
     async function fetchGlobalGuesses() { return 0; }
     async function incrementGlobalGuesses() { return 0; }
 
@@ -63,77 +65,80 @@ nt
 
     function spewRickImages() {
         const container = document.getElementById('rickSpewContainer');
-        const numImages = 69;
+        const numImages = 30; // Number of images to spew
 
-        const gravity = 0.5;     
-        const bounceFactor = 0.6; 
-        const fadeDuration = 3000; 
-        const frameRate = 16;      
+        const gravity = 0.5;      // acceleration downward
+        const bounceFactor = 0.6; // energy retained after bounce (0 < bounceFactor < 1)
+        const fadeDuration = 3000; // fadeout duration in ms
+        const frameRate = 16;      // approx 60fps
 
-
+        // Get viewport size
         const vw = window.innerWidth;
         const vh = window.innerHeight;
 
         for (let i = 0; i < numImages; i++) {
             const img = document.createElement('img');
-            img.src = 'rick.png'; 
+            img.src = '/images/rick.png'; // path to Rick Astley PNG
             img.style.position = 'fixed';
             img.style.width = '80px';
             img.style.height = '80px';
             img.style.userSelect = 'none';
             img.style.pointerEvents = 'none';
-            img.style.left = `${vw / 2 - 40}px`;  
-            img.style.top = `${vh / 2 - 40}px`;   
+            img.style.left = `${vw / 2 - 40}px`;  // center horizontally minus half width
+            img.style.top = `${vh / 2 - 40}px`;   // center vertically minus half height
             img.style.opacity = '1';
             img.style.transition = `opacity ${fadeDuration}ms ease-out`;
 
             container.appendChild(img);
 
-
+            // Initial physics state
             let posX = vw / 2 - 40;
             let posY = vh / 2 - 40;
-            let velocityX = (Math.random() - 0.5) * 10; 
-            let velocityY = (Math.random() - 1) * 15;   
-            const mass = 1; 
+            let velocityX = (Math.random() - 0.5) * 10; // random left/right velocity
+            let velocityY = (Math.random() - 1) * 15;   // initial upward velocity (negative is up)
+            const mass = 1; // Not really used here, but can be extended for forces
 
-            const floorY = vh - 80; 
+            const floorY = vh - 80; // bottom of viewport minus image height
 
-  
+            // Animate with physics
             let alive = true;
             const startTime = Date.now();
 
             function animate() {
                 if (!alive) return;
 
-
+                // Apply gravity
                 velocityY += gravity;
 
- 
+                // Update positions
                 posX += velocityX;
                 posY += velocityY;
 
-
+                // Bounce on floor
                 if (posY > floorY) {
                     posY = floorY;
                     velocityY = -velocityY * bounceFactor;
 
+                    // Damp horizontal velocity a bit
                     velocityX *= 0.8;
 
+                    // If velocityY very small after bounce, stop bouncing
                     if (Math.abs(velocityY) < 1) {
                         velocityY = 0;
                         velocityX = 0;
                     }
                 }
 
+                // Apply new positions
                 img.style.left = `${posX}px`;
                 img.style.top = `${posY}px`;
 
-            
+                // Check fade timer
                 const elapsed = Date.now() - startTime;
                 if (elapsed > fadeDuration) {
                     img.style.opacity = '0';
                     alive = false;
-                    
+                    // Remove after fade out
                     setTimeout(() => {
                         if (img.parentNode) {
                             container.removeChild(img);
@@ -220,7 +225,7 @@ nt
                     statusMessage.style.animation = 'glowPulse 2s ease-in-out infinite';
                     guessInput.disabled = true;
 
-            
+                    // Remove old listeners then add new click listener for next round
                     statusMessage.replaceWith(statusMessage.cloneNode(true));
                     statusMessage = document.getElementById('statusMessage');
 
@@ -235,7 +240,7 @@ nt
 
                     statusMessage.addEventListener('click', startNext);
 
-               
+                    // Auto-advance after 5 seconds
                     setTimeout(() => {
                         if (!hasGuessedCorrectly) {
                             statusMessage.removeEventListener('click', startNext);
@@ -346,11 +351,11 @@ nt
         currentSong = getRandomSong();
         recentSongs.push(currentSong.id);
         if (recentSongs.length > MAX_RECENT) {
-            recentSongs.shift(); 
+            recentSongs.shift(); // remove the oldest
         }
         console.log("🎶 Now playing:", currentSong.title);
 
-
+        // Reset UI
         songNameElem.textContent = '';
         guessAttempts = 0;
         guessAttemptsElem.textContent = 0;
@@ -361,6 +366,7 @@ nt
         const fill = musicScore.querySelector('.progress-fill');
         if (fill) fill.style.width = '0%';
 
+        // Reset statusMessage reference after clone
         const oldStatusMessage = document.getElementById('statusMessage');
         const newStatusMessage = oldStatusMessage.cloneNode(true);
         oldStatusMessage.parentNode.replaceChild(newStatusMessage, oldStatusMessage);
@@ -441,9 +447,9 @@ nt
                     matrix[i][j] = matrix[i - 1][j - 1];
                 } else {
                     matrix[i][j] = Math.min(
-                        matrix[i - 1][j] + 1,   
-                        matrix[i][j - 1] + 1,    
-                        matrix[i - 1][j - 1] + 1 
+                        matrix[i - 1][j] + 1,    // deletion
+                        matrix[i][j - 1] + 1,    // insertion
+                        matrix[i - 1][j - 1] + 1 // substitution
                     );
                 }
             }
@@ -458,18 +464,19 @@ nt
 
         const distance = levenshteinDistance(a, b);
         const maxLen = Math.max(a.length, b.length);
-        const score = (maxLen - distance) / maxLen; 
+        const score = (maxLen - distance) / maxLen; // similarity from 0 to 1
 
-
+        // Also accept partial match if one string contains the other at least 60%
         const partialMatch =
             a.includes(b) || b.includes(a) ? 0.6 : 0;
 
         return Math.max(score, partialMatch);
     }
 
+// Remove the second similarityScore entirely.
 
 
-
+    // Initialize
     loadingScreen.style.display = 'none';
     gameScreen.style.display = 'block';
     loadYouTubeAPI();
