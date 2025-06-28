@@ -1,4 +1,4 @@
-/* === GENERAL STYLES === */
+
 
 body, html {
     margin: 0;
@@ -12,7 +12,7 @@ body, html {
     align-items: center;
     flex-direction: column;
 }
-/* Help button fixed bottom-left */
+
 #helpButton {
     position: fixed;
     bottom: 12px;
@@ -50,7 +50,7 @@ p {
     z-index: 10000;
 }
 
-/* Tooltip text */
+
 #helpButton .tooltipText {
     visibility: hidden;
     width: 220px;
@@ -60,7 +60,7 @@ p {
     border-radius: 8px;
     padding: 8px 12px;
     position: absolute;
-    bottom: 130%; /* above the button */
+    bottom: 130%;
     left: 50%;
     transform: translateX(-50%);
     font-size: 13px;
@@ -74,11 +74,11 @@ p {
     z-index: 10001;
 }
 
-/* Tooltip arrow */
+
 #helpButton .tooltipText::after {
     content: "";
     position: absolute;
-    top: 100%; /* bottom of tooltip */
+    top: 100%; 
     left: 50%;
     margin-left: -6px;
     border-width: 6px;
@@ -86,14 +86,14 @@ p {
     border-color: #333 transparent transparent transparent;
 }
 
-/* Show tooltip on hover */
+
 #helpButton:hover .tooltipText {
     visibility: visible;
     opacity: 1;
     pointer-events: auto;
 }
 
-/* === LOADING SCREEN === */
+
 #loadingScreen {
     position: fixed;
     inset: 0;
@@ -129,12 +129,12 @@ p {
     margin-bottom: 30px;
     letter-spacing: 0.08em;
     font-weight: 600;
-    color: #766ea3; /* golden-yellow to match emoji tones */
+    color: #766ea3; 
     user-select: none;
     animation: fadeText 2s ease-in-out infinite alternate;
 }
 
-/* Musical note bouncing animation */
+
 .loading-notes {
     display: flex;
     gap: 16px;
@@ -155,13 +155,13 @@ p {
 
 .note {
     font-size: 36px;
-    color: #4caf50; /* green */
+    color: #4caf50; 
     user-select: none;
     animation: bounceNote 1.5s ease-in-out infinite;
     transform-origin: center bottom;
 }
 
-/* Stagger animation delays for wave bounce */
+
 .note:nth-child(1) { animation-delay: 0s; }
 .note:nth-child(2) { animation-delay: 0.15s; }
 .note:nth-child(3) { animation-delay: 0.3s; }
@@ -182,7 +182,7 @@ p {
     }
 }
 
-/* === MAIN GAME SCREEN === */
+
 
 #gameScreen {
     max-width: 480px;
@@ -193,7 +193,7 @@ p {
 h1 {
     font-weight: 700;
     margin-bottom: 20px;
-    color: #4caf50; /* green */
+    color: #4caf50; 
 }
 
 #songInfo {
@@ -205,7 +205,7 @@ h1 {
     font-weight: 600;
 }
 
-/* Music progress bar styled as a subtle music score */
+
 #musicScore {
     --bar-height: 16px;
     position: relative;
@@ -217,7 +217,6 @@ h1 {
     box-shadow: 0 0 8px #4caf5088;
 }
 
-/* The progress indicator inside the bar */
 #musicScore::before {
     content: '';
     position: absolute;
@@ -235,7 +234,7 @@ h1 {
     animation: musicGlow 2s ease-in-out infinite alternate;
 }
 
-/* Animated glowing effect */
+
 @keyframes musicGlow {
     0% {
         filter: drop-shadow(0 0 3px #4caf50);
@@ -245,7 +244,7 @@ h1 {
     }
 }
 
-/* Input box styling */
+
 #guessInput {
     width: 100%;
     font-size: 18px;
@@ -265,7 +264,7 @@ h1 {
     background: #2a2a2a;
 }
 
-/* Status message below input */
+
 #statusMessage {
     margin-top: 14px;
     font-size: 16px;
@@ -275,7 +274,7 @@ h1 {
     user-select: none;
 }
 
-/* === Total guesses today counter fixed bottom-left === */
+
 #totalGuessesToday {
     position: fixed;
     bottom: 12px;
