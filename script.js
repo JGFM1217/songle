@@ -1,16 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Detect mobile devices
-    const isMobile = /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    if (isMobile) {
-        document.body.innerHTML = `
-            <div style="display: flex; justify-content: center; align-items: center; height: 100vh; font-family: sans-serif; text-align: center; padding: 20px;">
-                <h2>:/ Mobile isn't supported - Please use a desktop</h2>
-            </div>
-        `;
-        return;
-    }
-
-    // All your other code from here on
     let playerReady = false;
     const loadingScreen = document.getElementById('loadingScreen');
     const gameScreen = document.getElementById('gameScreen');
@@ -26,28 +14,18 @@ document.addEventListener('DOMContentLoaded', () => {
         if (el.textContent.trim() === '0' && el.id !== 'guessAttempts') el.textContent = '';
     });
 
-    document.addEventListener('DOMContentLoaded', () => {
-        // Detect mobile devices
-        const isMobile = /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-
-        if (isMobile) {
-            document.body.innerHTML = `
-            <div style="display: flex; justify-content: center; align-items: center; height: 100vh; font-family: sans-serif; text-align: center; padding: 20px;">
-                <h2>:/ Mobile isn't supported - Please use a desktop</h2>
-            </div>
-        `;
-            return;
-        }
 
 
-        const SONGS = [
+
+    const SONGS = [
         { id: 'dQw4w9WgXcQ', title: 'Never Gonna Give You Up' },
         { id: 'i5NmRDLkSnI', title: 'Beggin' },
         { id: 'Cfv_6gLijEo', title: 'Troublemaker' },
+        { id: 'HIgvP7B3Hg8', title: 'Runaway Baby' },
         { id: 'xHOgq4C8P9Y', title: 'I Kissed a Girl' },
         { id: 'BuYf0taXoNw', title: "He's a Pirate" },
         { id: 'XZe_pV2rXuk', title: 'Stressed Out' },
-        { id: 'kAJz7c97Cyo', title: 'Baby One More Time' },
+        { id: 'kAJz7c97Cyo', title: '...Baby One More Time' },
         { id: 'GPGdXrQID7c', title: 'Fluorescent Adolescent' },
         { id: 'aJOTlE1K90k', title: 'Girl Like you' },
         { id: 'ZbZSe6N_BXs', title: 'Happy' },
@@ -55,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: '3tmd-ClpJxA', title: 'Believer' },
         { id: 'YQHsXMglC9A', title: 'Hello' },
         { id: 'ktvTqknDobU', title: 'Radioactive' },
-        { id: 'cNGjD0VG4R8', title: 'Perfect' },
+        { id: '2Vv-BfVoq4g', title: 'Perfect' },
         { id: 'CevxZvSJLk8', title: 'Roar' },
         { id: 'JlOZR5OwS', title: 'TIMEZONE'},
         { id: 'ds18Ozzp8h0', title: 'HONEY (ARE YOU COMING?)'},
@@ -71,6 +49,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let userInteracted = false;
     let youtubeAPIReady = false;
     let hasGuessedCorrectly = false;
+
+    // Placeholder for backend fetch/increment
     async function fetchGlobalGuesses() { return 0; }
     async function incrementGlobalGuesses() { return 0; }
 
@@ -149,6 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     statusMessage.style.animation = 'glowPulse 2s ease-in-out infinite';
                     guessInput.disabled = true;
 
+                    // Remove old listeners then add new click listener for next round
                     statusMessage.replaceWith(statusMessage.cloneNode(true));
                     statusMessage = document.getElementById('statusMessage');
 
@@ -162,6 +143,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
 
                     statusMessage.addEventListener('click', startNext);
+
+                    // Auto-advance after 5 seconds
                     setTimeout(() => {
                         if (!hasGuessedCorrectly) {
                             statusMessage.removeEventListener('click', startNext);
@@ -272,6 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currentSong = getRandomSong();
         console.log("🎶 Now playing:", currentSong.title);
 
+        // Reset UI
         songNameElem.textContent = '';
         guessAttempts = 0;
         guessAttemptsElem.textContent = 0;
@@ -282,6 +266,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const fill = musicScore.querySelector('.progress-fill');
         if (fill) fill.style.width = '0%';
 
+        // Reset statusMessage reference after clone
         const oldStatusMessage = document.getElementById('statusMessage');
         const newStatusMessage = oldStatusMessage.cloneNode(true);
         oldStatusMessage.parentNode.replaceChild(newStatusMessage, oldStatusMessage);
@@ -360,9 +345,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     matrix[i][j] = matrix[i - 1][j - 1];
                 } else {
                     matrix[i][j] = Math.min(
-                        matrix[i - 1][j] + 1,   
-                        matrix[i][j - 1] + 1,   
-                        matrix[i - 1][j - 1] + 1 
+                        matrix[i - 1][j] + 1,    // deletion
+                        matrix[i][j - 1] + 1,    // insertion
+                        matrix[i - 1][j - 1] + 1 // substitution
                     );
                 }
             }
@@ -370,20 +355,35 @@ document.addEventListener('DOMContentLoaded', () => {
         return matrix[alen][blen];
     }
 
+    function similarityScore(a, b) {
+        a = normalizeString(a);
+        b = normalizeString(b);
+        if (!a || !b) return 0;
 
-        function similarityScore(a, b) {
-            if (!a || !b) return 0;
-            const distance = levenshteinDistance(a, b);
-            const maxLength = Math.max(a.length, b.length);
-            if (maxLength === 0) return 1;
-            return (1 - distance / maxLength);
+        const distance = levenshteinDistance(a, b);
+        const maxLen = Math.max(a.length, b.length);
+        const score = (maxLen - distance) / maxLen; // similarity from 0 to 1
+
+        // Also accept partial match if one string contains the other at least 60%
+        const partialMatch =
+            a.includes(b) || b.includes(a) ? 0.6 : 0;
+
+        return Math.max(score, partialMatch);
+    }
+
+    function similarityScore(a, b) {
+        if (!a || !b) return 0;
+        let matches = 0;
+        const len = Math.min(a.length, b.length);
+        for (let i = 0; i < len; i++) {
+            if (a[i] === b[i]) matches++;
         }
+        return matches / Math.max(a.length, b.length);
+    }
 
-
-        loadingScreen.style.display = 'none';
-        gameScreen.style.display = 'block';
-        loadYouTubeAPI();
-        newSongRound();
-    }); 
-
-}); 
+    // Initialize
+    loadingScreen.style.display = 'none';
+    gameScreen.style.display = 'block';
+    loadYouTubeAPI();
+    newSongRound();
+});
