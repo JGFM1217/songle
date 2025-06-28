@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 'ZbZSe6N_BXs', title: 'Happy' },
         { id: 'Ju5USsFdrrY', title: 'Sugar' },
         { id: '3tmd-ClpJxA', title: 'Believer' },
-        { id: 'Ei8UnOPJX7w', title: 'Hello' },
+        { id: 'YQHsXMglC9A', title: 'Hello' },
         { id: 'ktvTqknDobU', title: 'Radioactive' },
         { id: '2Vv-BfVoq4g', title: 'Perfect' },
         { id: 'CevxZvSJLk8', title: 'Roar' },
@@ -310,7 +310,7 @@ document.addEventListener('DOMContentLoaded', () => {
             guessAttempts++;
             guessAttemptsElem.textContent = guessAttempts;
 
-            if (guess === correct || score >= 0.8) {
+            if (guess === correct || score >= 0.75) {
                 hasGuessedCorrectly = true;
                 songNameElem.textContent = currentSong.title;
                 statusMessage.textContent = `✅ Correct! Attempts: ${guessAttempts}`;
@@ -330,6 +330,45 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function normalizeString(str) {
         return str.toLowerCase().replace(/[^a-z0-9]/g, '');
+    }
+    function levenshteinDistance(a, b) {
+        const matrix = [];
+        const alen = a.length;
+        const blen = b.length;
+
+        for (let i = 0; i <= alen; i++) matrix[i] = [i];
+        for (let j = 0; j <= blen; j++) matrix[0][j] = j;
+
+        for (let i = 1; i <= alen; i++) {
+            for (let j = 1; j <= blen; j++) {
+                if (a[i - 1] === b[j - 1]) {
+                    matrix[i][j] = matrix[i - 1][j - 1];
+                } else {
+                    matrix[i][j] = Math.min(
+                        matrix[i - 1][j] + 1,    // deletion
+                        matrix[i][j - 1] + 1,    // insertion
+                        matrix[i - 1][j - 1] + 1 // substitution
+                    );
+                }
+            }
+        }
+        return matrix[alen][blen];
+    }
+
+    function similarityScore(a, b) {
+        a = normalizeString(a);
+        b = normalizeString(b);
+        if (!a || !b) return 0;
+
+        const distance = levenshteinDistance(a, b);
+        const maxLen = Math.max(a.length, b.length);
+        const score = (maxLen - distance) / maxLen; // similarity from 0 to 1
+
+        // Also accept partial match if one string contains the other at least 60%
+        const partialMatch =
+            a.includes(b) || b.includes(a) ? 0.6 : 0;
+
+        return Math.max(score, partialMatch);
     }
 
     function similarityScore(a, b) {
