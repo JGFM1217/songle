@@ -13,6 +13,8 @@ document.addEventListener('DOMContentLoaded', () => {
     [...gameScreen.querySelectorAll('*')].forEach(el => {
         if (el.textContent.trim() === '0' && el.id !== 'guessAttempts') el.textContent = '';
     });
+    const recentSongs = [];
+    const MAX_RECENT = 3;
 
 
 
@@ -42,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 'o6aJJ6Q5zhg', title: 'ESPRESSO MACCHIATO'},
         { id: 'uS9A9lqd7-k', title: 'Lets get it started'},
         { id: 'tBKYI3-3lMg', title: 'Armed and dangerous'},
-        { id: 'KtiRn_Pwvpw', title: 'Feel good INC'},
+        { id: 'IbpOfzrNjTY', title: 'Feel good INC'},
     ];
 
     let currentSong, player, progressInterval, guessAttempts = 0;
@@ -58,6 +60,98 @@ document.addEventListener('DOMContentLoaded', () => {
         const global = await fetchGlobalGuesses();
         totalGuessesCount.textContent = global;
     }
+
+    function spewRickImages() {
+        const container = document.getElementById('rickSpewContainer');
+        const numImages = 30; // Number of images to spew
+
+        const gravity = 0.5;      // acceleration downward
+        const bounceFactor = 0.6; // energy retained after bounce (0 < bounceFactor < 1)
+        const fadeDuration = 3000; // fadeout duration in ms
+        const frameRate = 16;      // approx 60fps
+
+        // Get viewport size
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+
+        for (let i = 0; i < numImages; i++) {
+            const img = document.createElement('img');
+            img.src = '/images/rick.png'; // path to Rick Astley PNG
+            img.style.position = 'fixed';
+            img.style.width = '80px';
+            img.style.height = '80px';
+            img.style.userSelect = 'none';
+            img.style.pointerEvents = 'none';
+            img.style.left = `${vw / 2 - 40}px`;  // center horizontally minus half width
+            img.style.top = `${vh / 2 - 40}px`;   // center vertically minus half height
+            img.style.opacity = '1';
+            img.style.transition = `opacity ${fadeDuration}ms ease-out`;
+
+            container.appendChild(img);
+
+            // Initial physics state
+            let posX = vw / 2 - 40;
+            let posY = vh / 2 - 40;
+            let velocityX = (Math.random() - 0.5) * 10; // random left/right velocity
+            let velocityY = (Math.random() - 1) * 15;   // initial upward velocity (negative is up)
+            const mass = 1; // Not really used here, but can be extended for forces
+
+            const floorY = vh - 80; // bottom of viewport minus image height
+
+            // Animate with physics
+            let alive = true;
+            const startTime = Date.now();
+
+            function animate() {
+                if (!alive) return;
+
+                // Apply gravity
+                velocityY += gravity;
+
+                // Update positions
+                posX += velocityX;
+                posY += velocityY;
+
+                // Bounce on floor
+                if (posY > floorY) {
+                    posY = floorY;
+                    velocityY = -velocityY * bounceFactor;
+
+                    // Damp horizontal velocity a bit
+                    velocityX *= 0.8;
+
+                    // If velocityY very small after bounce, stop bouncing
+                    if (Math.abs(velocityY) < 1) {
+                        velocityY = 0;
+                        velocityX = 0;
+                    }
+                }
+
+                // Apply new positions
+                img.style.left = `${posX}px`;
+                img.style.top = `${posY}px`;
+
+                // Check fade timer
+                const elapsed = Date.now() - startTime;
+                if (elapsed > fadeDuration) {
+                    img.style.opacity = '0';
+                    alive = false;
+                    // Remove after fade out
+                    setTimeout(() => {
+                        if (img.parentNode) {
+                            container.removeChild(img);
+                        }
+                    }, fadeDuration);
+                    return;
+                }
+
+                requestAnimationFrame(animate);
+            }
+
+            animate();
+        }
+    }
+
 
     function fadeVolume(target, duration = 1500, steps = 30) {
         if (!player || !player.setVolume) return;
@@ -253,6 +347,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         currentSong = getRandomSong();
+        recentSongs.push(currentSong.id);
+        if (recentSongs.length > MAX_RECENT) {
+            recentSongs.shift(); // remove the oldest
+        }
         console.log("🎶 Now playing:", currentSong.title);
 
         // Reset UI
@@ -318,11 +416,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 incrementGlobalGuesses();
                 updateTotalGuessesUI();
 
+                if (normalizeString(currentSong.title) === normalizeString("Never Gonna Give You Up")) {
+                    spewRickImages();
+                }
+
                 setTimeout(() => {
                     newSongRound();
                 }, 4000);
-            } else {
-                statusMessage.textContent = `❌ Incorrect! Try again!`;
             }
             guessInput.value = '';
         }
@@ -371,15 +471,8 @@ document.addEventListener('DOMContentLoaded', () => {
         return Math.max(score, partialMatch);
     }
 
-    function similarityScore(a, b) {
-        if (!a || !b) return 0;
-        let matches = 0;
-        const len = Math.min(a.length, b.length);
-        for (let i = 0; i < len; i++) {
-            if (a[i] === b[i]) matches++;
-        }
-        return matches / Math.max(a.length, b.length);
-    }
+// Remove the second similarityScore entirely.
+
 
     // Initialize
     loadingScreen.style.display = 'none';
