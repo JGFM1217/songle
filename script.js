@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     const recentSongs = [];
     const MAX_RECENT = 3;
-
+    img.src = 'rick.png'
 
 
 
