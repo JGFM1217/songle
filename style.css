@@ -1,4 +1,12 @@
-
+body {
+    height: 100vh;
+    margin: 0;
+    background: linear-gradient(to top, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.5) 80%, rgba(255, 255, 255, 1) 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #333;
+}
 
 body, html {
     margin: 0;
