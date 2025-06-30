@@ -35,19 +35,15 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 'cNGjD0VG4R8', title: 'Perfect' },
         { id: 'ds18Ozzp8h0', title: 'HONEY (ARE YOU COMING?)'},
         { id: 'WuEJfwhHiC8', title: 'Apple Juice'},
-        { id: 'x3iVWOcrXpo', title: 'OH OKAY'},
         { id: 'o6aJJ6Q5zhg', title: 'ESPRESSO MACCHIATO'},
         { id: 'uS9A9lqd7-k', title: 'Lets get it started'},
         { id: 'tBKYI3-3lMg', title: 'Armed and dangerous'},
         { id: 'IbpOfzrNjTY', title: 'Feel good INC'},
-        { id: '8bak7xFBa_k', title: 'Read you diary'},
         { id: 'CYpn8yUnX_c', title: 'I bet you look good on the dance floor'},
         { id: 'lyO-Sveg6a8', title: 'Knee socks'},
-        { id: 'bX-obw7vqSw', title: 'Sex with a ghost'},
         { id: 'SiJie3Z7DG8', title: 'Buddy Holly'},
         { id: 'x2yd-XZtkvk', title: 'Hotel California'},
         { id: 'l5t9IXtTr6g', title: 'Creep'},
-        { id: 'sRfn8KBDVS8', title: 'Screetches tale'},
         { id: 'aqZxIL4YE2I', title: 'September'},
         { id: 'V8gvSEtzOQg', title: 'Empire state of mind'},
         { id: 'glx5u-dBzNQ', title: 'Lydia'},
@@ -55,7 +51,6 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 'uU1kRIMj6mQ', title: 'Tribute'},
         { id: 'Z5NoQg8LdDk', title: 'Playing god'},
         { id: '4Q4Gy2Z7xZ0', title: 'Back to black'},
-        { id: 'OsIv7_DDIzk', title: 'Im not a vampire'},
         { id: 'FahA3C8Xpqo', title: 'Hate to say I told you so'},
         { id: 'yYDmaexVHic', title: 'Rhinestone eyes'},
         { id: 'dbevJM-2lcY', title: 'Cant hold us'},
@@ -274,10 +269,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 clearInterval(countdownInterval);
 
                 if (!hasGuessedCorrectly) {
-                    statusMessage.textContent = "❌ Time's up! Starting next song soon...";
+                    statusMessage.textContent = `❌ Time's up! The song was ${currentSong.title}`;
                     statusMessage.style.cursor = 'pointer';
                     statusMessage.style.animation = 'glowPulse 2s ease-in-out infinite';
                     guessInput.disabled = true;
+
 
                     statusMessage.replaceWith(statusMessage.cloneNode(true));
                     statusMessage = document.getElementById('statusMessage');
