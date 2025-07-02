@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 'Uz1Jwyxd4tE', title: 'Hate to say I told you so'},
         { id: 'yYDmaexVHic', title: 'Rhinestone eyes'},
         { id: 'dbevJM-2lcY', title: 'Cant hold us'},
-        { id: '86un37Ap97s', title: 'Timezone'},
+        { id: 'q5V2lXgZhdM', title: 'Timezone'},
         { id: '9I9c20LHmzY', title: 'Come as you are'},
         { id: 'rb7Il7gnEFs', title: 'Thats what I like'},
         { id: 'OK_b2-w0u60', title: 'Locked out of heaven'},
