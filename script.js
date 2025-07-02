@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (gameScreen) gameScreen.style.display = 'block';
 
 
-
+//Song List
     const SONGS = [
         { id: 'dQw4w9WgXcQ', title: 'Never Gonna Give You Up' },
         { id: 'i5NmRDLkSnI', title: 'Beggin' },
@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const global = await fetchGlobalGuesses();
         totalGuessesCount.textContent = global;
     }
-
+//Rick assley Easter Egg - Never Gonna Give you up
     function spewRickImages() {
         const container = document.getElementById('rickSpewContainer');
         const numImages = 69; 
