@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 'CYpn8yUnX_c', title: 'I bet you look good on the dance floor'},
         { id: 'lyO-Sveg6a8', title: 'Knee socks'},
         { id: 'SiJie3Z7DG8', title: 'Buddy Holly'},
-        { id: 'x2yd-XZtkvk', title: 'Hotel California'},
+        { id: 'dLl4PZtxia8', title: 'Hotel California'},
         { id: 'l5t9IXtTr6g', title: 'Creep'},
         { id: 'aqZxIL4YE2I', title: 'September'},
         { id: 'V8gvSEtzOQg', title: 'Empire state of mind'},
