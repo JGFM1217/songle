@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 'uU1kRIMj6mQ', title: 'Tribute'},
         { id: 'Z5NoQg8LdDk', title: 'Playing god'},
         { id: '4Q4Gy2Z7xZ0', title: 'Back to black'},
-        { id: 'FahA3C8Xpqo', title: 'Hate to say I told you so'},
+        { id: 'Uz1Jwyxd4tE', title: 'Hate to say I told you so'},
         { id: 'yYDmaexVHic', title: 'Rhinestone eyes'},
         { id: 'dbevJM-2lcY', title: 'Cant hold us'},
         { id: '86un37Ap97s', title: 'Timezone'},
