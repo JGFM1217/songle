@@ -82,7 +82,6 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 'qeSLRXm4TSc', title: 'Paper planes'},
         { id: 'dJ2oPQfbNYc', title: 'Babooshka'},
         { id: '1Ea8Rj2wQ2w', title: 'Telephone'},
-        { id: 'hUxSboj-FzI', title: 'Maneater'},
         { id: 'Ce2_k0LaE7E', title: 'S and M'},
         { id: 'QfxNI-bmNJg', title: 'Super Trouper'},
         { id: 'ojvldIzbaMo', title: 'Enjoy the silence'},
