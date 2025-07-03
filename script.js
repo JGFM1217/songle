@@ -94,7 +94,6 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 'v_B3qkp4nO4', title: 'Shotgun'},
         { id: 'l7MaKmKJqoc', title: 'Mr Brightside'},
         { id: 'XjHr-6Zl5P8', title: 'Galway Girl'},
-        { id: '7Qp5vcuMIlk', title: 'Castle on the hill'},
         { id: 'liTfD88dbCo', title: 'Shape of you'},
         { id: 'ft3b1-Cm-0M', title: 'Life on mars'},
         { id: 'EZ8ixdXRCOo', title: 'Under pressure'},
