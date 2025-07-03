@@ -63,7 +63,6 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 'ho1RzYneMtM', title: 'Bad habits'},
         { id: 'WgxGftJ_OxE', title: 'Rather be'},
         { id: 'IOspC5B69L4', title: 'Real love baby'},
-        { id: 'tmIO0eSAXrw', title: 'Good 4 u'},
         { id: 'M4JrFcrNY', title: 'Real slim shady'},
         { id: 'oplra1FJxWI', title: 'Dont look back in anger'},
         { id: '6hzrDeceEKc', title: 'Wonderwall'},
