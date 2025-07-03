@@ -78,7 +78,6 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 'iawgB2CDCrw', title: 'Flowers'},
         { id: '1_O_T6Aq85E', title: 'Snap out of it'},
         { id: 'AHI7JjJlpYo', title: 'Messy'},
-        { id: 'TAZkHYyio-M', title: 'Manchild'},
         { id: 'i-sm16yMZhg', title: 'Freaks'},
         { id: 'R3m6-U89Fxs', title: 'Its raining Men'},
         { id: 'qeSLRXm4TSc', title: 'Paper planes'},
@@ -106,6 +105,13 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 'kwwaWVP2PGE', title: 'Another one bites the dust'},
         { id: 'm3QGB9EfmpY', title: 'Dont stop me now'},
         { id: 'u4H-Zconvlw', title: 'Good luck babe'},
+        { id: 'y4zdDXPYo0I', title: 'Viva la Vida'},
+        { id: '5y_KJAg8bHI', title: 'Wake me up'},
+        { id: 'sZrTJesvJeo', title: 'Skyfall'},
+        { id: '08WiUcJmnZc', title: 'Sweater Weather'},
+        { id: '_GWKkqNoyEA', title: 'Counting Stars'},
+        { id: '5Sx7xqv_oYk', title: 'Dancing in the moonlight'},
+        { id: 'CY-wNacX-PM', title: 'Feeling good'},
     ];
 
     let currentSong, player, progressInterval, guessAttempts = 0;
