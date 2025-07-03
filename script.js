@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 'ds18Ozzp8h0', title: 'HONEY (ARE YOU COMING?)'},
         { id: 'WuEJfwhHiC8', title: 'Apple Juice'},
         { id: 'o6aJJ6Q5zhg', title: 'ESPRESSO MACCHIATO'},
-        { id: 'uS9A9lqd7-k', title: 'Lets get it started'},
+        { id: 'IKqV7DB8Iwg', title: 'Lets get it started'},
         { id: 'tBKYI3-3lMg', title: 'Armed and dangerous'},
         { id: 'IbpOfzrNjTY', title: 'Feel good INC'},
         { id: 'CYpn8yUnX_c', title: 'I bet you look good on the dance floor'},
@@ -112,6 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: '_GWKkqNoyEA', title: 'Counting Stars'},
         { id: '5Sx7xqv_oYk', title: 'Dancing in the moonlight'},
         { id: 'CY-wNacX-PM', title: 'Feeling good'},
+        { id: 'aT5JaB5agSE', title: 'All star'},
     ];
 
     let currentSong, player, progressInterval, guessAttempts = 0;
