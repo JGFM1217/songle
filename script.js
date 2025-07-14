@@ -458,7 +458,7 @@ document.addEventListener('DOMContentLoaded', () => {
             guessAttempts++;
             guessAttemptsElem.textContent = guessAttempts;
 
-            if (guess === correct || score >= 0.75) {
+            if (guess === correct || score >= 0.90) {
                 hasGuessedCorrectly = true;
                 songNameElem.textContent = currentSong.title;
                 statusMessage.textContent = `✅ Correct! Attempts: ${guessAttempts}`;
@@ -515,7 +515,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const score = (maxLen - distance) / maxLen; 
 
         const partialMatch =
-            a.includes(b) || b.includes(a) ? 0.6 : 0;
+            a.includes(b) || b.includes(a) ? 0.75 : 0;
 
         return Math.max(score, partialMatch);
     }
